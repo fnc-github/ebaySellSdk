@@ -3,7 +3,9 @@ Installation
 
 - Rename config.template.json to config.json
 - Fill out config.json values
-- Install Chrome for OAuth user authentication
+- For OAuth user authentication:
+  - Install Chrome browser
+  - Download ChromeDriver from [https://sites.google.com/a/chromium.org/chromedriver/home](https://sites.google.com/a/chromium.org/chromedriver/home)
+  - Put chromedriver.exe in bin\ subdirectory
 
 
-   
