@@ -4,7 +4,7 @@ import csv
 ebay.init()
 
 csvPath = 'ecom_combined.txt'
-textFile = open("itemsToList.txt", "r")
+textFile = open("skusToList.txt", "r")
 itemsToList = []
 for text in textFile.readlines():
     itemsToList.append(text.replace("\n", "").lower())
