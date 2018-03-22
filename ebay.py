@@ -173,9 +173,39 @@ def getInventoryItems(limit=200, offset=0):
     if response.status_code == 200:
         return response.json()
     else:
-        print("ERROR: Failed to retreive inventory items: "
+        print("ERROR: Failed to retrieve inventory items: "
               + response.json()['errors'][0]['message'])
 
+def getInventoryLocations(limit=200, offset=0):
+    headers = {
+        'Authorization': 'Bearer ' + userAccessToken
+    }
+    response = requests.get(
+        buildApiUrl('/sell/inventory/v1/location'), params={'limit': limit, 'offset': offset}, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("ERROR: Failed to retrieve locations: "
+              + response.json()['errors'][0]['message'])
+
+def createInventoryLocation(merchantLocationKey, merchantLocationDict):
+    headers = {
+        'Content-Type': 'application/json',
+        'Content-Language': 'en-US',
+        'Authorization': 'Bearer ' + userAccessToken
+    }
+
+    response = requests.post(
+        buildApiUrl('https://api.ebay.com/sell/inventory/v1/location/' + merchantLocationKey),
+        headers=headers, data=merchantLocationDict
+    )
+
+    if response.status_code == 204:
+        return True
+    else:
+        print("ERROR: Failed to create location: "
+              + response.json()['errors'][0]['message'])
 
 def isTokenGood(token):
     headers = {
@@ -208,9 +238,18 @@ def createOrReplaceInventoryItem(skuStr, listingObj):
         'Content-Type': 'application/json',
         'Content-Language': 'en-US'
     }
+
+    # req = requests.Request('POST', buildApiUrl(
+    #     '/sell/inventory/v1/inventory_item/' + skuStr), 
+    #     headers=headers, data=json.dumps(listingObj))
+    # prepared = req.prepare()
+    # pretty_print_POST(prepared)
+    # with requests.Session() as s:
+    #     response = s.send(prepared)
+
     response = requests.put(buildApiUrl(
-        '/sell/inventory/v1/inventory_item/' + skuStr),
-        data=json.dumps(listingObj), headers=headers)
+       '/sell/inventory/v1/inventory_item/' + skuStr),
+       data=json.dumps(listingObj), headers=headers)
 
     if response.status_code == 204:
         return True
@@ -296,6 +335,24 @@ def init():
 
     setUserAccessToken(token)
 
+
+def pretty_print_POST(req):
+    """
+    At this point it is completely built and ready
+    to be fired; it is "prepared".
+
+    However pay attention at the formatting used in 
+    this function because it is programmed to be pretty 
+    printed and may differ from the actual request.
+    """
+    print('{}\n{}\n{}\n\n{}'.format(
+        '-----------START-----------',
+        req.method + ' ' + req.url,
+        '\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
+        req.body,
+    ))
+
+    
 
 if __name__ == '__main__':
     main()
